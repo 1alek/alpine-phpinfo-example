@@ -1,0 +1,22 @@
+version: '3.2'
+
+services:
+
+  phpinfo:
+    build: .
+    image: ${REGISTRY}/${NAMESPACE}/${PROJECT}:${BUILD_TAG}
+    container_name: ${PROJECT}
+    hostname: ${HOSTNAME}
+    env_file:
+      - .env
+    ports:
+      - ${WEBPORT}:80
+      - ${LOGZPORT}:1234
+    volumes:
+      - /data/runtime:/var/www/html/api/runtime
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 65535

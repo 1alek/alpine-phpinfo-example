@@ -1,0 +1,41 @@
+stages:
+    - build
+    - deploy
+    - tests
+
+variables:
+    GIT_STRATEGY: clone
+
+Build Images:
+    stage: build
+    script:
+        - make clean
+        - make build
+        - make push
+    tags:
+        - builder
+    only:
+        - master
+
+Deploy APP:
+    stage: deploy
+    variables:
+        ENV: dev
+    allow_failure: false
+    script:
+        - echo "ENV=${ENV}" >> .env
+        - make install
+    tags:
+        - phpinfo-app
+    only:
+        - master
+
+Run Tests:
+    stage: tests
+    allow_failure: false
+    script:
+        - make test
+    tags:
+        - phpinfo-app
+    only:
+        - master
